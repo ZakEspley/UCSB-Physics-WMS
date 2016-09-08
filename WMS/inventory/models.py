@@ -8,10 +8,20 @@ class Group(models.Model):
     description = models.CharField(max_length=140)
     barcode = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name
+
 class Location(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=140)
     barcode = models.PositiveIntegerField()
+    sublocation = models.ForeignKey("self", blank=True, null=True)
+
+    def __str__(self):
+        if self.sublocation is None:
+            return self.name
+        else:
+            return str(self.sublocation) + " > " + self.name
 
 
 class State(models.Model):
@@ -19,16 +29,25 @@ class State(models.Model):
     description = models.CharField(max_length=140)
     barcode = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=140)
     barcode = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Class(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=140)
+
+    def __str__(self):
+        return self.name
 
 class Item(models.Model):
     barcode = models.PositiveIntegerField()
@@ -41,3 +60,6 @@ class Item(models.Model):
     classes = models.ForeignKey(Class)
     checkout_date = models.DateTimeField('check out date')
     checkin_date = models.DateTimeField('check in date')
+
+    def __str__(self):
+        return self.name
