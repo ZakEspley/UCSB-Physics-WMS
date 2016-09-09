@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 # Create your models here.
 
@@ -58,8 +59,8 @@ class Item(models.Model):
     description = models.CharField(max_length=140)
     tags = models.ForeignKey(Tag)
     classes = models.ForeignKey(Class)
-    checkout_date = models.DateTimeField('check out date')
-    checkin_date = models.DateTimeField('check in date')
+    checkout_date = models.DateTimeField('check out date', blank=True, null=True)
+    checkin_date = models.DateTimeField('check in date', blank=True, null=True)
 
     def __str__(self):
         return self.name

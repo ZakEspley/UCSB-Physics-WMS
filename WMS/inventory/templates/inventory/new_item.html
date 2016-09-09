@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load crispy_forms_tags %}
+    <div class="container">
+        <h1>Create a new item</h1>
+        <form action="" method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{%  endblock content%}
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="utf-8">#}
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+{#    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->#}
+{#    {% load static %}#}
+{#    <meta name="description" content="">#}
+{#    <meta name="Zak Espley" content="">#}
+{##}
+{#    <title>Inventory</title>#}
+{##}
+{#    <!-- Bootstrap core CSS -->#}
+{#    <link href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">#}
+{##}
+{#    <!-- Custom styles for this template -->#}
+{#    <link href="{% static 'css/style.css' %}" rel="stylesheet">#}
+{##}
+{#    {% load crispy_forms_tags %}#}
+{##}
+{#  </head>#}
+{#<body>#}
+{#{% block content %}#}
+{#    <div class="container">#}
+{#        <h1>Create a new item</h1>#}
+{#        <form action="" method="POST" class="post-form">#}
+{#            {% csrf_token %}#}
+{#            {{ form|crispy }}#}
+{#            <button type="submit" class="btn btn-primary">Submit</button>#}
+{#        </form>#}
+{#    </div>#}
+{#{%  endblock %}#}
+{#</body>#}
+{#</html>#}
