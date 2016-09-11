@@ -2,7 +2,7 @@
 {% block content %}
     {% load crispy_forms_tags %}
     <div class="container">
-        <h1>Create a new item</h1>
+        <h1>{{ title }}</h1>
         <form action="" method="POST" class="post-form">
             {% csrf_token %}
             {{ form|crispy }}

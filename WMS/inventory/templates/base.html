@@ -16,10 +16,14 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrap/js/dropdown.js' %}"></script>
+    <script src="{% static 'bower_components/bootstrap/js/collapse.js' %}"></script>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+{#    <nav class="nav nav-pills navbar-fixed-top navbar-link">#}
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -29,20 +33,57 @@
           </button>
           <a class="navbar-brand" href="/">UCSB Physics Inventory</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+        <div id="navbar" class="collapse navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li class="{% if active == 'home' %}active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
+                <li class="{% if active == 'item' %}active{% endif %}"><a href="{% url 'items' %}">Items</a></li>
+                <li class="{% if active == 'group' %}active{% endif %}"><a href="{% url 'groups' %}">Item Groups</a></li>
+                <li class="{% if active == 'location' %}active{% endif %}"><a href="{% url 'locations' %}">Locations</a></li>
+                <li class="{% if active == 'state' %}active{% endif %} hidden-xs hidden-sm">
+                    <a href="{% url 'states' %}">States</a>
+                </li>
+                <li class="{% if active == 'tag' %}active{% endif %} hidden-xs hidden-sm">
+                    <a href="{% url 'tags' %}">Tags</a>
+                </li>
+                <li class="{% if active == 'class' %}active{% endif %} hidden-xs hidden-sm">
+                    <a href="{% url 'classes' %}">Classes</a>
+                </li>
+                <li class="{% if active == 'room' %}active{% endif %} hidden_xs hidden-sm">
+                    <a href="{% url 'rooms' %}">Rooms</a>
+                </li>
+
+                <li class="dropdown visible-xs visible-sm">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="true" aria-expanded="false">More<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'states' %}">States</a></li>
+                            <li class=""><a href="{% url 'tags' %}">Tags</a></li>
+                            <li class=""><a href="{% url 'classes' %}">Classes</a></li>
+                            <li class=""><a href="{% url 'rooms' %}">Rooms</a></li>
+                        </ul>
+                </li>
+            </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
+    <script>$(".nav a").on("click", function(){
+   $(".nav").find(".active").removeClass("active");
+   $(this).parent().addClass("active");
+    });
+    </script>
+
     {% block content %}
     {%  endblock content %}
 
- <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script>
+        var height = $('.nav').css('height');
+        height = Number(height.replace('px', ''));
+        height += 10;
+        console.log(height);
+        $('body').css('padding-top', height + 'px');
+    </script>
 
 </body>
+
 </html>

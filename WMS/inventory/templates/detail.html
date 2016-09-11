@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load filters %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>{{ object.name }}</h1>
+
+        {% for attribute in columns %}
+            <p>{{ attribute|titlize }}: {{ object|get_attr:attribute }}</p>
+        {% endfor %}
+
+{#        {% for field, value in object %}#}
+{#        <p> {{ field }}: {{ value }} </p>]#}
+{#        {% endfor %}#}
+
+    </div>
+
+{% endblock content %}
