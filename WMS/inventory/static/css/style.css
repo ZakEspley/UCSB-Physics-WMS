@@ -1,5 +1,5 @@
 thead th {
-    background-color: #00b3ee;
+    background-color: #8E9AB4;
     color: #ffffff;
     text-align: center;
 }
@@ -9,11 +9,13 @@ tbody td {
 }
 
 tbody > tr:nth-child(odd) > td {
-    background-color: #bce8f1;
+    /*background-color: #bce8f1;*/
+    background-color: #DAD7DE;
 }
 
 tbody > tr:nth-child(even) > td {
-    background-color: #eeeeee;
+    /*background-color: #eeeeee;*/
+    background-color: #ADCBBD;
 }
 
 tr>td:first-child {
@@ -42,14 +44,14 @@ table {
   margin-top: 0px;
   margin-bottom: 0;
 }
-[class*="col-"] {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  background-color: #eee;
-  background-color: rgba(86,61,124,.15);
-  border: 1px solid #ddd;
-  border: 1px solid rgba(86,61,124,.2);
-}
+/*[class*="col-"] {*/
+  /*padding-top: 15px;*/
+  /*padding-bottom: 15px;*/
+  /*background-color: #eee;*/
+  /*background-color: rgba(86,61,124,.15);*/
+  /*border: 1px solid #ddd;*/
+  /*border: 1px solid rgba(86,61,124,.2);*/
+/*}*/
 
 hr {
   margin-top: 40px;
@@ -62,4 +64,8 @@ hr {
 
 #index_header {
     margin-top:35px
+}
+
+.menu-btn {
+    margin: 5px;
 }

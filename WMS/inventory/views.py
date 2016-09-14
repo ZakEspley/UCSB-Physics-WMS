@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
+from datetimewidget.widgets import DateTimeWidget
+from django.forms.models import modelform_factory
+from django.urls import reverse_lazy, reverse
+from django import forms
+
 from django.core import serializers
 from django.db import models
 from django.template import loader
@@ -12,124 +17,47 @@ import inflect
 p = inflect.engine()
 # Create your views here.
 
-def object_maker(obj, title=None):
+################################################################################################
+#     Below is the first way I made the views using a decorator to provide the views with
+#     arguments, and to generalize them. I found that the class views were simplier
+#     so I switched to those but I am keeping this as a comment for an example.
+#
+# def list_maker(obj, columns, title=None):
+#     """
+#     Wrapper function that wraps view in HTTP Response for displaying a table of all instances of obj in the database
+#     :param obj: Model to be displayed
+#     :param columns: I list of heading for the columns that correlate to the fields you want to display in the table.
+#     :param title: This is the header that will be used to label the table. If left blank, the title default to the
+#                     name of the object pluralized.
+#     :return: Returns aa rendered HTTPResponse.
+#
+#     The context argument is used in the inventory/lists.html file to create the table, and in the base.html file to
+#     select the active navigation bar.
+#     """
+#     if title is None:
+#         title = p.plural(obj.__name__)
+#
+#     def list_decorator(func):
+#         def wrapper(request):
+#             object_list = obj.objects.order_by('name')
+#             context = {
+#                 'object_list': object_list,
+#                 'columns': columns,
+#                 'active': obj.__name__.lower(),
+#                 'title': title
+#             }
+#             return render(request, "inventory/lists2.html", context)
+#         return wrapper
+#     return list_decorator
 
-    def obj_decorator(func):
 
-        def wrapper(request):
-            form = obj()
-            if request.method == "POST":
-                form = obj(request.POST)
-                if form.is_valid():
-                    form.save()
-                    return redirect('new_'+obj.__name__.replace('Form', "").lower())
-            else:
-                return render(request, 'inventory/new_object.html', {'form': form, "title": title})
-
-        return wrapper
-
-    return obj_decorator
-
-def list_maker(obj, columns, title=None):
-    """
-    Wrapper function that wraps view in HTTP Response for displaying a table of all instances of obj in the database
-    :param obj: Model to be displayed
-    :param columns: I list of heading for the columns that correlate to the fields you want to display in the table.
-    :param title: This is the header that will be used to label the table. If left blank, the title default to the
-                    name of the object pluralized.
-    :return: Returns aa rendered HTTPResponse.
-
-    The context argument is used in the inventory/lists.html file to create the table, and in the base.html file to
-    select the active navigation bar.
-    """
-    if title is None:
-        title = p.plural(obj.__name__)
-
-    def list_decorator(func):
-        def wrapper(request):
-            object_list = obj.objects.order_by('name')
-            context = {
-                'object_list': object_list,
-                'columns': columns,
-                'active': obj.__name__.lower(),
-                'title': title
-            }
-            return render(request, "inventory/lists2.html", context)
-        return wrapper
-    return list_decorator
+# @list_maker(Room, ['name', 'description', 'number'])
+# def rooms(request):
+#     pass
 
 
 def index(request):
     return render(request, 'inventory/index.html', {'active': "home"})
-
-
-@object_maker(ItemForm, "New Item")
-def new_item(request):
-    pass
-
-
-@object_maker(GroupForm, "New Group")
-def new_group(request):
-    pass
-
-
-@object_maker(TagForm, "New Tag")
-def new_tag(request):
-    pass
-
-
-@object_maker(LocationForm, "New Location")
-def new_location(request):
-    pass
-
-
-@object_maker(StateForm, "New State")
-def new_state(request):
-    pass
-
-
-@object_maker(ClassForm, "New Class")
-def new_class(request):
-    pass
-
-@object_maker(RoomForm, "New Room")
-def new_room(request):
-    pass
-
-
-@list_maker(Item, ['name', 'description', 'location', 'state'], "Items in Stock")
-def items(request):
-    pass
-
-
-@list_maker(Location, ['name', 'description', 'room'])
-def locations(request):
-    pass
-
-
-@list_maker(Group, ['name', 'description'], "Item Groups")
-def groups(request):
-    pass
-
-
-@list_maker(Class, ['name', 'description'])
-def classes(request):
-    pass
-
-
-@list_maker(Tag, ['name', 'description'])
-def tags(request):
-    pass
-
-
-@list_maker(State, ['name', 'description'])
-def states(request):
-    pass
-
-
-@list_maker(Room, ['name', 'description', 'number'])
-def rooms(request):
-    pass
 
 
 class GenericDetailView(DetailView):
@@ -145,6 +73,7 @@ class GenericDetailView(DetailView):
             for c in temp:
                 self.columns.append(str(c).split(".")[-1])
         context['columns'] = self.columns
+        context['active'] = self.model.__name__.lower()
         return context
 
 
@@ -153,6 +82,7 @@ class GenericListView(ListView):
     template_name = "lists.html"
     columns = None
     title = None
+
     def get_context_data(self, **kwargs):
         context = super(GenericListView, self).get_context_data(**kwargs)
         context['columns'] = self.columns
@@ -162,3 +92,64 @@ class GenericListView(ListView):
         context['active'] = self.model.__name__.lower()
         return context
 
+
+class GenericUpdateView(UpdateView):
+    model = Item
+    widgets = {'checkout_date': DateTimeWidget(usel10n=True, bootstrap_version=3),
+               'checkin_date': DateTimeWidget(usel10n=True, bootstrap_version=3),
+               'tags': forms.widgets.CheckboxSelectMultiple(),
+               'classes': forms.widgets.CheckboxSelectMultiple()}
+    template_name = 'inventory/update.html'
+    fields = '__all__'
+    columns = None
+    title = None
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericUpdateView, self).get_context_data(**kwargs)
+        context['columns'] = self.columns
+        context['title'] = self.title
+        context['active'] = self.model.__name__.lower()
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(self.model.__name__.lower()+"_detail", pk= self.object.id)
+
+    def get_form_class(self):
+        return modelform_factory(self.model, fields="__all__", widgets=self.widgets)
+
+
+class GenericDeleteView(DeleteView):
+    model = Item
+    template_name = "inventory/delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy(self.model.__name__.lower()+"s")
+
+
+class GenericCreateView(CreateView):
+    model = Item
+    widgets = {'checkout_date': DateTimeWidget(usel10n=True, bootstrap_version=3),
+               'checkin_date': DateTimeWidget(usel10n=True, bootstrap_version=3),
+               'tags': forms.widgets.CheckboxSelectMultiple(),
+               'classes': forms.widgets.CheckboxSelectMultiple()}
+    template_name = 'inventory/new_object.html'
+    fields = '__all__'
+    columns = None
+    title = None
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericCreateView, self).get_context_data(**kwargs)
+        context['columns'] = self.columns
+        if self.title is None:
+            self.title = "Add New {0}".format(self.model.__name__)
+        context['title'] = self.title
+        context['active'] = self.model.__name__.lower()
+        return context
+
+    def get_success_url(self):
+        return reverse(self.model.__name__.lower()+"_detail", kwargs={'pk': self.object.pk})
+
+    def get_form_class(self):
+        print(self.model)
+        return modelform_factory(self.model, fields="__all__", widgets=self.widgets)

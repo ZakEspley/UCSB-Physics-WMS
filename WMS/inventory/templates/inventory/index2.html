@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Index Test</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}" media="screen" title="no title" charset="utf-8">
+</head>
+<body>
+<h1>Welcome</h1>
+    {% if item_list %}
+        <script>console.log("fuck this");</script>
+        {% for item in item_list %}
+            <div class="container4">
+                <span class="content4">
+                    {{ item.name }}
+                </span>
+            </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p>No Items input yet.</p>
+
+    {% endif %}
+
+</body>
+</html>

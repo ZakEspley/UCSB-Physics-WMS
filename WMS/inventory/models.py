@@ -38,8 +38,8 @@ class Group(models.Model, IterModel):
 class Location(models.Model, IterModel):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=140)
-    barcode = models.PositiveIntegerField(blank=True, null=True)
     room = models.ForeignKey("Room")
+    barcode = models.PositiveIntegerField(blank=True, null=True)
 
     def __str__(self):
         return str(self.room) + " > " + self.name
@@ -72,12 +72,12 @@ class Class(models.Model, IterModel):
 
 
 class Item(models.Model):
-    barcode = models.PositiveIntegerField(blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True)
-    group = models.ForeignKey(Group, blank=True, null=True)
     name = models.CharField(max_length=50)
-    state = models.ForeignKey(State, blank=True, null=True)
     description = models.CharField(max_length=140)
+    barcode = models.PositiveIntegerField(blank=True, null=True)
+    group = models.ForeignKey(Group, blank=True, null=True)
+    location = models.ForeignKey(Location, blank=True, null=True)
+    state = models.ForeignKey(State, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True, null=True)
     classes = models.ManyToManyField(Class, blank=True, null=True)
     checkout_date = models.DateTimeField('check out date', blank=True, null=True)

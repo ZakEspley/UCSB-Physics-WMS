@@ -4,6 +4,11 @@
 {% block content %}
 
     <div class="container">
+        <div class="btn-group">
+            <a class="btn btn-default menu-btn" href="{% url 'update_'|add:active object.id %}">Update {{ object.name }}</a>
+            <a class="btn btn-default menu-btn" href="{% url 'delete_'|add:active object.id %}">Delete {{ object.name }}</a>
+        </div>
+
         <h1>{{ object.name }}</h1>
 
         {% for attribute in columns %}

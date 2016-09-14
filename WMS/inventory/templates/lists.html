@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load filters %}
+
+{% block content %}
+     <div class="container">
+        <a class="btn btn-default" href="{% url 'new_'|add:active %}">Add New {{ active|titlize }}</a>
+    </div>
+
+    <div class="container">
+        <h1>{{ title|titlize }}</h1>
+        <table class="table table-hover" id="dTable">
+            <thead>
+                <tr>
+                    {% for attribute in columns %}
+                        {% if forloop.counter0 == 0 %}
+                        <th class="header">
+                            {{ attribute|titlize }}
+{#                            <span class="caret"></span>#}
+                        </th>
+                        {% else %}
+                            <th class="">{{ attribute|titlize }}</th>
+                        {% endif %}
+
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for obj in object_list  %}
+                <tr class="clickable-row" data-url="{% url active|add:'_detail' obj.id %}">
+                        {% for attribute in columns %}
+                            <td>{{ obj|get_attr:attribute }}</td>
+                        {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        jQuery(document).ready(function($) {
+            $('.clickable-row').click(function() {
+                window.location = $(this).data('url');
+            });
+            $("#dTable").DataTable();
+        });
+    </script>
+
+{% endblock content %}
